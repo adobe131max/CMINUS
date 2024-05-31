@@ -29,11 +29,29 @@ syntax_tree_node *node(const char *node_name, int children_num, ...);
 %token  SEMI
         COMMA
         ASSIGNOP
-        LBRACE
-        RBRACE
-        TYPE
-        VOID
+        LT
+        LE
+        GT
+        GE
+        EQ
+        NE
+        AND
+        OR
+        DOT
+        NOT
+        LBRA
+        RBRA
+        LMBRA
+        RMBRA
+        LLBRA
+        RLBRA
+        INT_T
+        FLOAT_T
+        STRUCT
         RETURN
+        IF
+        ELSE
+        WHILE
 
 /* TODO: Complete this definition.
    Hint: See pass_node(), node(), and syntax_tree.h.
@@ -43,9 +61,10 @@ syntax_tree_node *node(const char *node_name, int children_num, ...);
 }
 
 /* TODO: Your tokens here. */
-%token <node> ERROR
-%token <node> ADD
 %token <node> ID
+%token <node> INT
+%token <node> FLOAT
+%token <node> ERROR
 
 %type <node> program
 

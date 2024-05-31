@@ -36,11 +36,7 @@ llvm_map_components_to_libnames(
 
 INCLUDE_DIRECTORIES(
     include
-    include/cminusfc
     include/common
-    include/lightir
-    include/codegen
-    include/passes/
     ${LLVM_INCLUDE_DIRS}
 )
 
