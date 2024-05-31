@@ -8,8 +8,6 @@
 #include "syntax_analyzer.h"
 
 int lines;
-int pos_start;
-int pos_end;
 
 void pass_node(char *text){
      yylval.node = new_syntax_tree_node(text);
@@ -18,11 +16,18 @@ void pass_node(char *text){
 /*****************声明和选项设置  end*****************/
 %}
 
-
 %%
-" "     { pos_end++; }
-"("     { pos_start = pos_end; pos_end++; return LBRACE; }
-")"     { pos_start = pos_end; pos_end++; return RBRACE; }
-\+      { pos_start = pos_end; pos_end++; pass_node(yytext); return ADD; }
-.       { pos_start = pos_end; pos_end++; return ERROR; }
+" "                             ;
+\n                              lines++;
+";"                             return SEMI;
+","                             return COMMA;
+"="                             return ASSIGNOP;
+"("                             return LBRACE;
+")"                             return RBRACE;
+int | float                     return TYPE;
+[A-Za-z_]+[A-Za-z0-9_]*         pass_node(yytext); return ID;
+void                            return VOID;
+return                          return RETURN;
+\+                              pass_node(yytext); return ADD;
+.                               return ERROR;
 %%

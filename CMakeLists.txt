@@ -53,4 +53,3 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_BINARY_DIR})
 add_subdirectory(src)
-# add_subdirectory(tests) 不要build tests目录，里面有后面实验需要完成的内容

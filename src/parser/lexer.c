@@ -4,12 +4,8 @@
 #include "syntax_tree.h"
 #include<syntax_analyzer.h>
 
-///
-extern int lines;
-extern int pos_start;
-extern int pos_end;
+extern int lines;   // 行
 
-///
 extern FILE *yyin;
 extern char *yytext;
 extern int yylex();
@@ -17,7 +13,6 @@ extern int yylex();
 // Mac-only hack.
 YYSTYPE yylval;
 
-///
 int main(int argc, const char **argv) {
      if (argc != 2) {
           printf("usage: lexer input_file\n");
@@ -32,11 +27,9 @@ int main(int argc, const char **argv) {
      }
 
      int token;
-     printf("%5s\t%10s\t%s\t%s\n", "Token", "Text", "Line", "Column (Start,End)");
+     printf("%10s\t%s\n", "Token", "Line");
      while ((token = yylex())) {
-          printf("%-5d\t%10s\t%d\t(%d,%d)\n",
-                 token, yytext,
-                 lines, pos_start, pos_end);
+          printf("%10s\t%d\n", yytext, lines);
      }
      return 0;
 }

@@ -15,8 +15,6 @@ extern FILE * yyin;
 // external variables from lexical_analyzer module
 extern int lines;
 extern char * yytext;
-extern int pos_end;
-extern int pos_start;
 
 // Global syntax tree
 syntax_tree *gt;
@@ -28,19 +26,27 @@ void yyerror(const char *s);
 syntax_tree_node *node(const char *node_name, int children_num, ...);
 %}
 
-%token  LBRACE
+%token  SEMI
+        COMMA
+        ASSIGNOP
+        LBRACE
         RBRACE
+        TYPE
+        VOID
+        RETURN
 
 /* TODO: Complete this definition.
    Hint: See pass_node(), node(), and syntax_tree.h.
          Use forward declaring. */
 %union {
-    syntax_tree_node*          node
+    syntax_tree_node *          node;
 }
 
 /* TODO: Your tokens here. */
 %token <node> ERROR
 %token <node> ADD
+%token <node> ID
+
 %type <node> program
 
 %start program
@@ -62,7 +68,7 @@ void yyerror(const char * s)
 {
     // TO STUDENTS: This is just an example.
     // You can customize it as you like.
-    fprintf(stderr, "error at line %d column %d: %s\n", lines, pos_start, s);
+    fprintf(stderr, "error at line %d: %s\n", lines, s);
 }
 
 /// Parse input from file `input_path`, and prints the parsing results
@@ -80,7 +86,7 @@ syntax_tree *parse(const char *input_path)
         yyin = stdin;
     }
 
-    lines = pos_start = pos_end = 1;
+    lines = 1;
     gt = new_syntax_tree();
     yyrestart(yyin);
     yyparse();
