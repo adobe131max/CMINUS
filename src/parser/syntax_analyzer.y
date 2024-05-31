@@ -28,10 +28,15 @@ void yyerror(const char *s);
 syntax_tree_node *node(const char *node_name, int children_num, ...);
 %}
 
+%token  LBRACE
+        RBRACE
+
 /* TODO: Complete this definition.
    Hint: See pass_node(), node(), and syntax_tree.h.
          Use forward declaring. */
-%union {}
+%union {
+    syntax_tree_node*          node
+}
 
 /* TODO: Your tokens here. */
 %token <node> ERROR

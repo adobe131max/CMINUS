@@ -16,15 +16,13 @@ void pass_node(char *text){
 }
 
 /*****************声明和选项设置  end*****************/
-
 %}
 
 
 %%
- /* to do for students */
- /* two cases for you, pass_node will send flex's token to bison */
-\+ 	{pos_start = pos_end; pos_end += 1; pass_node(yytext); return ADD;}
-. { pos_start = pos_end; pos_end++; return ERROR; }
-
- /****请在此补全所有flex的模式与动作  end******/
+" "     { pos_end++; }
+"("     { pos_start = pos_end; pos_end++; return LBRACE; }
+")"     { pos_start = pos_end; pos_end++; return RBRACE; }
+\+      { pos_start = pos_end; pos_end++; pass_node(yytext); return ADD; }
+.       { pos_start = pos_end; pos_end++; return ERROR; }
 %%

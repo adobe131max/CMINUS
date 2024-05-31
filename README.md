@@ -1,25 +1,22 @@
 # 简介
 
-本仓库为 USTC 编译原理和技术 2023 的课程实验仓库。在本学期的编译实验中，你们将构建一个从词法分析器开始到后端代码生成的JIANMU编译器。
+WHU 2024 编译原理大作业
 
-你们需要 fork 此 repo 到自己的仓库下，随后在自己的仓库中完成实验。
+## How to build
 
-## FAQ: 如何与上游远程分支进行 merge 操作
-
-简单来说，你需要给上游仓库设置一个别名（alias）。在你 fork 后的本地仓库中：
-
-```shell
-$ git remote add upstream https://cscourse.ustc.edu.cn/vdir/Gitlab/compiler_staff/2023ustc-jianmu-compiler.git
+打开项目
+``` bash
+mkdir build
+cd build
+cmake ..
+make
 ```
+如果构建成功，你会在 build 文件夹下找到 lexer 和 parser 可执行文件，用于对 Cminusf 文件进行词法和语法分析。
 
-然后尝试将远程的 commit 与你本地仓库进行 merge 操作：
+## 记录
 
-```shell
-$ git pull upstream master
-```
+yylval 是一个全局变量，用于在词法分析器(由 Flex 生成)和语法分析器(由 Bison 生成)之间传递词法单元的语义值。它的类型是 YYSTYPE，而 YYSTYPE 是由用户定义的一个宏，通常是一个联合体。yylval 就可以认为是 yacc 中 %union 定义的结构体(union 结构)。
 
-然后将更改同步到你 fork 得到的远程仓库中：
+## References
 
-```shell
-$ git push origin master
-```
+- [USTC 编译原理和技术 2023](https://ustc-compiler-principles.github.io/2023/)
