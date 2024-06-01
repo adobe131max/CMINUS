@@ -19,7 +19,6 @@ WHU 2024 编译原理大作业
 
 若没有错误则输出
 
-
 ## 2 How to build
 
 打开项目
@@ -29,7 +28,7 @@ cd build
 cmake ..
 make
 ```
-如果构建成功，你会在 build 文件夹下找到 lexer 和 parser 可执行文件，用于对 Cminusf 文件进行词法和语法分析。
+如果构建成功，可以在build文件夹下找到lexer和parser可执行文件，运行：`./lexer ../test/example1.c`
 
 ## 3 记录
 

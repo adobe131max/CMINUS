@@ -4,7 +4,7 @@
 #include "syntax_tree.h"
 #include<syntax_analyzer.h>
 
-extern int lines;   // 行
+extern int lines;
 
 extern FILE *yyin;
 extern char *yytext;
@@ -27,9 +27,9 @@ int main(int argc, const char **argv) {
      }
 
      int token;
-     printf("%10s\t%s\n", "Token", "Line");
+    //  printf("%s\t%s\n", "Token", "Line");
      while ((token = yylex())) {
-          printf("%10s\t%d\n", yytext, lines);
+        //   printf("%s\t%d\n", yytext, lines);
      }
      return 0;
 }

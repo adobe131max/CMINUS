@@ -26,6 +26,7 @@ void yyerror(const char *s);
 syntax_tree_node *node(const char *node_name, int children_num, ...);
 %}
 
+// 终结符
 %token  SEMI
         COMMA
         ASSIGNOP
@@ -53,26 +54,30 @@ syntax_tree_node *node(const char *node_name, int children_num, ...);
         ELSE
         WHILE
 
-/* TODO: Complete this definition.
-   Hint: See pass_node(), node(), and syntax_tree.h.
-         Use forward declaring. */
+// 数据类型定义 Hint: See pass_node(), node(), and syntax_tree.h. Use forward declaring.
 %union {
     syntax_tree_node *          node;
+    char *                      string;
+    int                         number;
+    float                       floats;
 }
 
-/* TODO: Your tokens here. */
 %token <node> ID
-%token <node> INT
-%token <node> FLOAT
+%token <number> INT
+%token <floats> FLOAT
 %token <node> ERROR
 
+// 非终结符
 %type <node> program
 
+// 结合性与优先级
+%left '+' '-'
+%left '*' '/'
+
+// 文法开始符号
 %start program
 
 %%
-/* TODO: Your rules here. */
-
 /* Example:
 program: declaration-list {$$ = node( "program", 1, $1); gt->root = $$;}
        ;

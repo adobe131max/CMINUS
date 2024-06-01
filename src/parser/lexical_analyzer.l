@@ -1,6 +1,6 @@
 %option noyywrap
+
 %{
-/*****************声明和选项设置  begin*****************/
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,16 +12,14 @@ int lines = 1;
 void pass_node(char *text){
      yylval.node = new_syntax_tree_node(text);
 }
-
-/*****************声明和选项设置  end*****************/
 %}
 
+DOT             \.
 LETTER          [a-zA-Z]
 DIGIT           [0-9]
-INT             {DIGIT}+
-FLOAT           (({DIGIT}+\.)|({DIGIT}*\.{DIGIT}+))
+INT             [\-]?{DIGIT}+
+FLOAT           [\-]?{DIGIT}+{DOT}{DIGIT}+
 ID              [A-Za-z_]+[A-Za-z0-9_]*
-DOT             \.
 COMMENT         [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 COMMENT_BEGIN   "/*"
 COMMENT_END     "*/"
@@ -50,7 +48,6 @@ COMMENT_END     "*/"
 "{"                             return LLBRA;
 "}"                             return RLBRA;
 
-
 "+" |
 "-" |
 "*" |                            
@@ -64,9 +61,9 @@ if                              return IF;
 else                            return ELSE;
 while                           return WHILE;
 
-{ID}                            return ID;
-{INT}                           return INT;
-{FLOAT}                         return FLOAT;
+{ID}                            yylval.string = strdup(yytext); return ID;
+{INT}                           yylval.number = atoi(yytext); return INT;
+{FLOAT}                         yylval.floats = (float)atof(yytext); return FLOAT;
 
-.                               return ERROR;
+.                               printf("Error type A at Line %d: Mysterious character \"%s\".\n", lines, yytext); return ERROR;
 %%
