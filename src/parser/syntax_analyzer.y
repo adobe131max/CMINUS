@@ -30,31 +30,29 @@ syntax_tree_node *node(const char *node_name, int children_num, ...);
 %token  SEMI
         COMMA
         ASSIGNOP
-        LT
-        LE
-        GT
-        GE
-        EQ
-        NE
+        RELOP
+        PLUS
+        MINUS
+        start
+        DIV
         AND
         OR
         DOT
         NOT
-        LBRA
-        RBRA
-        LMBRA
-        RMBRA
-        LLBRA
-        RLBRA
-        INT_T
-        FLOAT_T
+        LP
+        LB
+        LC
+        RP
+        RB
+        RC
+        TYPE
         STRUCT
         RETURN
         IF
         ELSE
         WHILE
 
-// 数据类型定义 Hint: See pass_node(), node(), and syntax_tree.h. Use forward declaring.
+// 数据类型定义
 %union {
     syntax_tree_node *          node;
     char *                      string;
@@ -62,45 +60,106 @@ syntax_tree_node *node(const char *node_name, int children_num, ...);
     float                       floats;
 }
 
-%token <node> ID
+// 重新token定义类型
+%token <node>   ID
 %token <number> INT
 %token <floats> FLOAT
-%token <node> ERROR
+%token <node>   ERROR
 
 // 非终结符
-%type <node> program
+%type <node> Program
+%type <node> ExtDefList
+%type <node> ExtDef
+%type <node> Specifier
+%type <node> ExtDecList
+%type <node> FunDec
+%type <node> CompSt
+%type <node> VarDec
+%type <node> DefList
 
 // 结合性与优先级
 %left '+' '-'
 %left '*' '/'
 
-// 文法开始符号
-%start program
-
-%%
-/* Example:
-program: declaration-list {$$ = node( "program", 1, $1); gt->root = $$;}
-       ;
-*/
-
-program : ;
+// 定义文法开始符号
+%start Program
 
 %%
 
-/// The error reporting function.
-void yyerror(const char * s)
-{
-    // TO STUDENTS: This is just an example.
-    // You can customize it as you like.
-    fprintf(stderr, "error at line %d: %s\n", lines, s);
+Program:
+    ExtDefList {
+        $$ = node("Program", 1, $1);
+        gt->root = $$;
+    };
+
+ExtDefList:
+    ExtDef ExtDefList {
+        $$ = node("ExtDefList", 2, $1, $2);
+    }
+    | {
+        $$ = NULL;
+    };
+
+ExtDef:
+    Specifier ExtDecList SEMI {
+
+    }
+    | Specifier SEMI {
+
+    }
+    | Specifier FunDec CompSt {
+
+    };
+
+ExtDecList:
+    VarDec {
+
+    }
+    | VarDec COMMA ExtDecList {
+
+    };
+
+Specifier:
+    TYPE {
+
+    } 
+    | StructSpecifier {
+
+    };
+
+StructSpecifier:
+    STRUCT OptTag LC DefList RC {
+
+    }
+    | STRUCT Tag {
+
+    };
+
+OptTag:
+    ID {
+
+    }
+    | {
+
+    };
+
+Tag:
+    ID {
+
+    };
+
+%%
+
+// 语法错误处理
+void yyerror(const char * s) {
+    fprintf(stderr, "Error type B at Line %d: %s.\n", lines, s);
 }
 
 /// Parse input from file `input_path`, and prints the parsing results
 /// to stdout.  If input_path is NULL, read from stdin.
 ///
 /// This function initializes essential states before running yyparse().
-syntax_tree *parse(const char *input_path)
-{
+syntax_tree *parse(const char *input_path) {
     if (input_path != NULL) {
         if (!(yyin = fopen(input_path, "r"))) {
             fprintf(stderr, "[ERR] Open input file %s failed.\n", input_path);
@@ -117,11 +176,8 @@ syntax_tree *parse(const char *input_path)
     return gt;
 }
 
-/// A helper function to quickly construct a tree node.
-///
-/// e.g. $$ = node("program", 1, $1);
-syntax_tree_node *node(const char *name, int children_num, ...)
-{
+// A helper function to quickly construct a tree node.
+syntax_tree_node *node(const char *name, int children_num, ...) {
     syntax_tree_node *p = new_syntax_tree_node(name);
     syntax_tree_node *child;
     if (children_num == 0) {

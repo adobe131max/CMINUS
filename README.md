@@ -17,23 +17,31 @@ WHU 2024 编译原理大作业
 
 可能存在多个错误，但每行只有一个错误，需要输出所有错误，每行一个
 
-若没有错误则输出
+若没有错误则输出语法树
 
 ## 2 How to build
 
 打开项目
+
 ``` bash
 mkdir build
 cd build
 cmake ..
 make
 ```
-如果构建成功，可以在build文件夹下找到lexer和parser可执行文件，运行：`./lexer ../test/example1.c`
 
-## 3 记录
+## 3 How to run
+
+构建成功后运行:
+
+`./lexer ../test/example1.c`
+
+`./parser ../test/example2.c`
+
+## 4 记录
 
 yylval 是一个全局变量，用于在词法分析器(由 Flex 生成)和语法分析器(由 Bison 生成)之间传递词法单元的语义值。它的类型是 YYSTYPE，而 YYSTYPE 是由用户定义的一个宏，通常是一个联合体。yylval 就可以认为是 yacc 中 %union 定义的结构体(union 结构)。
 
-## 4 References
+## 5 References
 
 - [USTC 编译原理和技术 2023](https://ustc-compiler-principles.github.io/2023/)

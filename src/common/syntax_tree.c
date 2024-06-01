@@ -59,9 +59,9 @@ void print_syntax_tree_node(FILE * fout, syntax_tree_node * node, int level)
 	// print myself
 	int i;
 	for (i = 0; i < level; i++) {
-		fprintf(fout, "|  ");
+		fprintf(fout, "  ");
 	}
-	fprintf(fout, ">--%s %s\n", (node->children_num ? "+" : "*"), node->name);
+	fprintf(fout, "%s %s\n", (node->children_num ? "+" : "*"), node->name);
 
 	for (i = 0; i < node->children_num; i++) {
 		print_syntax_tree_node(fout, node->children[i], level + 1);
