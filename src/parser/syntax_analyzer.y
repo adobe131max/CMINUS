@@ -33,7 +33,7 @@ syntax_tree_node *node(const char *node_name, int children_num, ...);
         RELOP
         PLUS
         MINUS
-        start
+        STAR
         DIV
         AND
         OR
@@ -64,7 +64,6 @@ syntax_tree_node *node(const char *node_name, int children_num, ...);
 %token <node>   ID
 %token <number> INT
 %token <floats> FLOAT
-%token <node>   ERROR
 
 // 非终结符
 %type <node> Program
@@ -72,14 +71,31 @@ syntax_tree_node *node(const char *node_name, int children_num, ...);
 %type <node> ExtDef
 %type <node> Specifier
 %type <node> ExtDecList
-%type <node> FunDec
-%type <node> CompSt
+%type <node> StructSpecifier
+%type <node> OptTag
+%type <node> Tag
 %type <node> VarDec
 %type <node> DefList
+%type <node> FunDec
+%type <node> CompSt
+%type <node> VarList
+%type <node> ParamDec
+%type <node> StmtList
+%type <node> Stmt
+%type <node> Def
+%type <node> DecList
+%type <node> Dec
+%type <node> Exp
+%type <node> Args
 
 // 结合性与优先级
-%left '+' '-'
-%left '*' '/'
+%right ASSIGNOP
+%left OR
+%left AND
+%left RELOP
+%left PLUS MINUS
+%left STAR DIV
+%right NOT
 
 // 定义文法开始符号
 %start Program
@@ -102,50 +118,205 @@ ExtDefList:
 
 ExtDef:
     Specifier ExtDecList SEMI {
-
+        $$ = NULL;
     }
     | Specifier SEMI {
-
+        $$ = NULL;
     }
     | Specifier FunDec CompSt {
-
+        $$ = NULL;
     };
 
 ExtDecList:
     VarDec {
-
+        $$ = NULL;
     }
     | VarDec COMMA ExtDecList {
-
+        $$ = NULL;
     };
 
 Specifier:
     TYPE {
-
+        $$ = NULL;
     } 
     | StructSpecifier {
-
+        $$ = NULL;
     };
 
 StructSpecifier:
     STRUCT OptTag LC DefList RC {
-
+        $$ = NULL;
     }
     | STRUCT Tag {
-
+        $$ = NULL;
     };
 
 OptTag:
     ID {
-
+        $$ = NULL;
     }
     | {
-
+        $$ = NULL;
     };
 
 Tag:
     ID {
+        $$ = NULL;
+    };
 
+VarDec:
+    ID {
+        $$ = NULL;
+    } 
+    | VarDec LB INT RB {
+        $$ = NULL;
+    };
+
+FunDec:
+    ID LP VarList RP {
+        $$ = NULL;
+    }
+    | ID LP RP {
+        $$ = NULL;
+    };
+
+VarList:
+    ParamDec COMMA VarList {
+        $$ = NULL;
+    }
+    | ParamDec {
+        $$ = NULL;
+    };
+
+ParamDec:
+    Specifier VarDec {
+        $$ = NULL;
+    };
+
+CompSt:
+    LC DefList StmtList RC {
+        $$ = NULL;
+    };
+
+StmtList:
+    Stmt StmtList {
+        $$ = NULL;
+    }
+    | {
+        $$ = NULL;
+    };
+
+Stmt:
+    Exp SEMI {
+        $$ = NULL;
+    }
+    | CompSt {
+        $$ = NULL;
+    }
+    | RETURN Exp SEMI {
+        $$ = NULL;
+    }
+    | IF LP Exp RP Stmt {
+        $$ = NULL;
+    }
+    | IF LP Exp RP Stmt ELSE Stmt {
+        $$ = NULL;
+    }
+    | WHILE LP Exp RP Stmt {
+        $$ = NULL;
+    };
+
+DefList:
+    Def DefList {
+        $$ = NULL;
+    }
+    | {
+        $$ = NULL;
+    };
+
+Def:
+    Specifier DecList SEMI {
+        $$ = NULL;
+    };
+
+DecList:
+    Dec {
+        $$ = NULL;
+    }
+    | Dec COMMA DecList {
+        $$ = NULL;
+    };
+
+Dec:
+    VarDec {
+        $$ = NULL;
+    }
+    | VarDec ASSIGNOP Exp {
+        $$ = NULL;
+    };
+
+Exp:
+    Exp ASSIGNOP Exp {
+        $$ = NULL;
+    }
+    | Exp AND Exp {
+        $$ = NULL;
+    }
+    | Exp OR Exp {
+        $$ = NULL;
+    }
+    | Exp RELOP Exp {
+        $$ = NULL;
+    }
+    | Exp PLUS Exp {
+        $$ = NULL;
+    }
+    | Exp MINUS Exp {
+        $$ = NULL;
+    }
+    | Exp STAR Exp {
+        $$ = NULL;
+    }
+    | Exp DIV Exp {
+        $$ = NULL;
+    }
+    | LP Exp RP {
+        $$ = NULL;
+    }
+    | MINUS Exp {
+        $$ = NULL;
+    }
+    | NOT Exp {
+        $$ = NULL;
+    }
+    | ID LP Args RP {
+        $$ = NULL;
+    }
+    | ID LP RP {
+        $$ = NULL;
+    }
+    | Exp LB Exp RB {
+        $$ = NULL;
+    }
+    | Exp DOT ID {
+        $$ = NULL;
+    }
+    | ID {
+        $$ = NULL;
+    }
+    | INT {
+        $$ = NULL;
+    }
+    | FLOAT {
+        $$ = NULL;
+    }
+
+Args:
+    Exp COMMA Args {
+        $$ = NULL;
+    }
+    | Exp {
+        $$ = NULL;
     };
 
 %%
