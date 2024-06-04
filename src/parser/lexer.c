@@ -31,6 +31,6 @@ int main(int argc, const char **argv) {
      while ((token = yylex())) {
         //   printf("%s\t%d\n", yytext, lines);
      }
-     printf("\n");
+    //  printf("\n");
      return 0;
 }
