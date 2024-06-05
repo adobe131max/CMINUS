@@ -41,9 +41,7 @@ make
 
 构建成功后运行:
 
-`./lexer ../test/example1.c`
-
-`./parser ../test/example2.c`
+`./parser ../test/example1.c`
 
 ## 4 记录
 

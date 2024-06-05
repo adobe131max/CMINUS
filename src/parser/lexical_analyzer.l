@@ -86,11 +86,11 @@ float                               pass_node("TYPE: float", lines);return TYPE;
 \/\*([^*]|\*+[^*/])*\*+\/           ;/*comment*/
 
 0[0-9]+ |
-0[xX][0-9a-xA-X]+                   error=1;printf("Error type A at Line %d: invalid int \"%s\".\n", lines, yytext);/*捕获错误的数字，而不是识别成两个int*/
+0[xX][0-9a-xA-X]+                   error=1;printf("Error type A at Line %d: invalid int \"%s\".\n", lines, yytext);pass_int_node("INT", lines, 0);return INT;/*捕获错误的数字，而不是识别成两个int*/
 
 [0-9]*\. |
 \.[0-9]* |
-[0-9]+\.[0-9]*[eE]                  error=1;printf("Error type A at Line %d: invalid float \"%s\".\n", lines, yytext);
+[0-9]+\.[0-9]*[eE]                  error=1;printf("Error type A at Line %d: invalid float \"%s\".\n", lines, yytext);pass_float_node("FLOAT", lines, 0.0);return FLOAT;
 
 "*/"                                error=1;printf("Error type A at Line %d: invalid comment \"%s\".\n", lines, yytext);
 

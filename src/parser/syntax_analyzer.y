@@ -14,14 +14,15 @@ extern FILE * yyin;
 
 // external variables from lexical_analyzer module
 extern int lines;
-extern int error; 
+extern int error;
 extern char * yytext;
 
 // Global syntax tree
 syntax_tree *gt;
 
 // Error reporting
-void yyerror(const char *s);
+void yyerror(const char* s);
+void print_e(const char* s);
 
 // Helper functions written for you with love
 syntax_tree_node *node(const char *node_name, int children_num, ...);
@@ -221,6 +222,9 @@ Stmt:
     }
     | WHILE LP Exp RP Stmt {
         $$ = node("Stmt", 5, $1, $2, $3, $4, $5);
+    }
+    | IF LP Exp RP error Stmt {
+        print_e("Missing \";\"");
     };
 
 DefList:
@@ -307,6 +311,9 @@ Exp:
     | FLOAT {
         $$ = node("Exp", 1, $1);
     }
+    | Exp LB Exp error RB {
+        print_e("Missing \"]\"");
+    }
 
 Args:
     Exp COMMA Args {
@@ -320,6 +327,12 @@ Args:
 
 // 语法错误处理
 void yyerror(const char * s) {
+    error = 1;
+    /* fprintf(stderr, "Error type B at Line %d: %s.\n", lines, s); */
+}
+
+void print_e(const char* s) {
+    error = 1;
     fprintf(stderr, "Error type B at Line %d: %s.\n", lines, s);
 }
 
