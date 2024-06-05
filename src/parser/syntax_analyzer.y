@@ -26,44 +26,40 @@ void yyerror(const char *s);
 syntax_tree_node *node(const char *node_name, int children_num, ...);
 %}
 
-// 终结符
-%token  SEMI
-        COMMA
-        ASSIGNOP
-        RELOP
-        PLUS
-        MINUS
-        STAR
-        DIV
-        AND
-        OR
-        DOT
-        NOT
-        LP
-        LB
-        LC
-        RP
-        RB
-        RC
-        TYPE
-        STRUCT
-        RETURN
-        IF
-        ELSE
-        WHILE
-
 // 数据类型定义
 %union {
     syntax_tree_node *          node;
-    char *                      string;
-    int                         number;
-    float                       floats;
 }
 
+// 终结符
 // 重新token定义类型
-%token <node>   ID
-%token <number> INT
-%token <floats> FLOAT
+%token <node> ID
+%token <node> INT
+%token <node> FLOAT
+%token <node> SEMI
+%token <node> COMMA
+%token <node> ASSIGNOP
+%token <node> RELOP
+%token <node> PLUS
+%token <node> MINUS
+%token <node> STAR
+%token <node> DIV
+%token <node> AND
+%token <node> OR
+%token <node> DOT
+%token <node> NOT
+%token <node> LP
+%token <node> LB
+%token <node> LC
+%token <node> RP
+%token <node> RB
+%token <node> RC
+%token <node> TYPE
+%token <node> STRUCT
+%token <node> RETURN
+%token <node> IF
+%token <node> ELSE
+%token <node> WHILE
 
 // 非终结符
 %type <node> Program
@@ -118,42 +114,42 @@ ExtDefList:
 
 ExtDef:
     Specifier ExtDecList SEMI {
-        $$ = NULL;
+        $$ = node("ExtDef", 3, $1, $2, $3);
     }
     | Specifier SEMI {
-        $$ = NULL;
+        $$ = node("ExtDef", 2, $1, $2);
     }
     | Specifier FunDec CompSt {
-        $$ = NULL;
+        $$ = node("ExtDef", 3, $1, $2, $3);
     };
 
 ExtDecList:
     VarDec {
-        $$ = NULL;
+        $$ = node("ExtDecList", 1, $1);
     }
     | VarDec COMMA ExtDecList {
-        $$ = NULL;
+        $$ = node("ExtDecList", 3, $1, $2, $3);
     };
 
 Specifier:
     TYPE {
-        $$ = NULL;
+        $$ = node("Specifier", 1, $1);
     } 
     | StructSpecifier {
-        $$ = NULL;
+        $$ = node("Specifier", 1, $1);
     };
 
 StructSpecifier:
     STRUCT OptTag LC DefList RC {
-        $$ = NULL;
+        $$ = node("StructSpecifier", 5, $1, $2, $3, $4, $5);
     }
     | STRUCT Tag {
-        $$ = NULL;
+        $$ = node("StructSpecifier", 2, $1, $2);
     };
 
 OptTag:
     ID {
-        $$ = NULL;
+        $$ = node("OptTag", 1, $1);
     }
     | {
         $$ = NULL;
@@ -161,46 +157,46 @@ OptTag:
 
 Tag:
     ID {
-        $$ = NULL;
+        $$ = node("Tag", 1, $1);
     };
 
 VarDec:
     ID {
-        $$ = NULL;
+        $$ = node("VarDec", 1, $1);
     } 
     | VarDec LB INT RB {
-        $$ = NULL;
+        $$ = node("VarDec", 4, $1, $2, $3, $4);
     };
 
 FunDec:
     ID LP VarList RP {
-        $$ = NULL;
+        $$ = node("FunDec", 4, $1, $2, $3, $4);
     }
     | ID LP RP {
-        $$ = NULL;
+        $$ = node("FunDec", 3, $1, $2, $3);
     };
 
 VarList:
     ParamDec COMMA VarList {
-        $$ = NULL;
+        $$ = node("VarList", 3, $1, $2, $3);
     }
     | ParamDec {
-        $$ = NULL;
+        $$ = node("VarList", 1, $1);
     };
 
 ParamDec:
     Specifier VarDec {
-        $$ = NULL;
+        $$ = node("Param", 2, $1, $2);
     };
 
 CompSt:
     LC DefList StmtList RC {
-        $$ = NULL;
+        $$ = node("CompSt", 4, $1, $2, $3, $4);
     };
 
 StmtList:
     Stmt StmtList {
-        $$ = NULL;
+        $$ = node("StmtList", 2, $1, $2);
     }
     | {
         $$ = NULL;
@@ -208,27 +204,27 @@ StmtList:
 
 Stmt:
     Exp SEMI {
-        $$ = NULL;
+        $$ = node("Stmt", 2, $1, $2);
     }
     | CompSt {
-        $$ = NULL;
+        $$ = node("Stmt", 1, $1);
     }
     | RETURN Exp SEMI {
-        $$ = NULL;
+        $$ = node("Stmt", 3, $1, $2, $3);
     }
     | IF LP Exp RP Stmt {
-        $$ = NULL;
+        $$ = node("Stmt", 5, $1, $2, $3, $4, $5);
     }
     | IF LP Exp RP Stmt ELSE Stmt {
-        $$ = NULL;
+        $$ = node("Stmt", 7, $1, $2, $3, $4, $5, $6, $7);
     }
     | WHILE LP Exp RP Stmt {
-        $$ = NULL;
+        $$ = node("Stmt", 5, $1, $2, $3, $4, $5);
     };
 
 DefList:
     Def DefList {
-        $$ = NULL;
+        $$ = node("DefList", 2, $1, $2);
     }
     | {
         $$ = NULL;
@@ -236,87 +232,87 @@ DefList:
 
 Def:
     Specifier DecList SEMI {
-        $$ = NULL;
+        $$ = node("Def", 3, $1, $2, $3);
     };
 
 DecList:
     Dec {
-        $$ = NULL;
+        $$ = node("DecList", 1, $1);
     }
     | Dec COMMA DecList {
-        $$ = NULL;
+        $$ = node("DecList", 3, $1, $2, $3);
     };
 
 Dec:
     VarDec {
-        $$ = NULL;
+        $$ = node("Dec", 1, $1);
     }
     | VarDec ASSIGNOP Exp {
-        $$ = NULL;
+        $$ = node("Dec", 3, $1, $2, $3);
     };
 
 Exp:
     Exp ASSIGNOP Exp {
-        $$ = NULL;
+        $$ = node("Exp", 3, $1, $2, $3);
     }
     | Exp AND Exp {
-        $$ = NULL;
+        $$ = node("Exp", 3, $1, $2, $3);
     }
     | Exp OR Exp {
-        $$ = NULL;
+        $$ = node("Exp", 3, $1, $2, $3);
     }
     | Exp RELOP Exp {
-        $$ = NULL;
+        $$ = node("Exp", 3, $1, $2, $3);
     }
     | Exp PLUS Exp {
-        $$ = NULL;
+        $$ = node("Exp", 3, $1, $2, $3);
     }
     | Exp MINUS Exp {
-        $$ = NULL;
+        $$ = node("Exp", 3, $1, $2, $3);
     }
     | Exp STAR Exp {
-        $$ = NULL;
+        $$ = node("Exp", 3, $1, $2, $3);
     }
     | Exp DIV Exp {
-        $$ = NULL;
+        $$ = node("Exp", 3, $1, $2, $3);
     }
     | LP Exp RP {
-        $$ = NULL;
+        $$ = node("Exp", 3, $1, $2, $3);
     }
     | MINUS Exp {
-        $$ = NULL;
+        $$ = node("Exp", 2, $1, $2);
     }
     | NOT Exp {
-        $$ = NULL;
+        $$ = node("Exp", 2, $1, $2);
     }
     | ID LP Args RP {
-        $$ = NULL;
+        $$ = node("Exp", 4, $1, $2, $3, $4);
     }
     | ID LP RP {
-        $$ = NULL;
+        $$ = node("Exp", 3, $1, $2, $3);
     }
     | Exp LB Exp RB {
-        $$ = NULL;
+        $$ = node("Exp", 4, $1, $2, $3, $4);
     }
     | Exp DOT ID {
-        $$ = NULL;
+        $$ = node("Exp", 3, $1, $2, $3);
     }
     | ID {
-        $$ = NULL;
+        $$ = node("Exp", 1, $1);
     }
     | INT {
-        $$ = NULL;
+        $$ = node("Exp", 1, $1);
     }
     | FLOAT {
-        $$ = NULL;
+        $$ = node("Exp", 1, $1);
     }
 
 Args:
     Exp COMMA Args {
-        $$ = NULL;
+        $$ = node("Args", 3, $1, $2, $3);
     }
     | Exp {
-        $$ = NULL;
+        $$ = node("Args", 1, $1);
     };
 
 %%
@@ -349,18 +345,23 @@ syntax_tree *parse(const char *input_path) {
 
 // A helper function to quickly construct a tree node.
 syntax_tree_node *node(const char *name, int children_num, ...) {
-    syntax_tree_node *p = new_syntax_tree_node(name);
+    syntax_tree_node *p = new_syntax_tree_node(name, 0);
     syntax_tree_node *child;
     if (children_num == 0) {
-        child = new_syntax_tree_node("epsilon");
+        child = new_syntax_tree_node("epsilon", 0);
         syntax_tree_add_child(p, child);
     } else {
         va_list ap;
         va_start(ap, children_num);
+        int line = 0x7fffffff;
         for (int i = 0; i < children_num; ++i) {
             child = va_arg(ap, syntax_tree_node *);
+            if (child && child->line < line) {
+                line = child->line;
+            }
             syntax_tree_add_child(p, child);
         }
+        p->line = line;
         va_end(ap);
     }
     return p;

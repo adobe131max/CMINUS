@@ -3,7 +3,7 @@
 
 #include "syntax_tree.h"
 
-syntax_tree_node * new_syntax_tree_node(const char * name)
+syntax_tree_node * new_syntax_tree_node(const char * name, int line)
 {
 	syntax_tree_node * new_node = (syntax_tree_node *)malloc(sizeof(syntax_tree_node));
 	if (name)
@@ -11,6 +11,50 @@ syntax_tree_node * new_syntax_tree_node(const char * name)
 	else
 		new_node->name[0] = '\0';
 	new_node->children_num = 0;
+    new_node->line = line;
+    new_node->value_type = NON_TYPE;
+	return new_node;
+}
+
+syntax_tree_node * new_syntax_tree_node_id(const char * name, int line, const char * id)
+{
+	syntax_tree_node * new_node = (syntax_tree_node *)malloc(sizeof(syntax_tree_node));
+	if (name)
+		strncpy(new_node->name, name, SYNTAX_TREE_NODE_NAME_MAX);
+	else
+		new_node->name[0] = '\0';
+	new_node->children_num = 0;
+    new_node->line = line;
+    new_node->value_type = STRING_TYPE;
+    strncpy(new_node->str_value, id, SYNTAX_TREE_NODE_ID_MAX);
+	return new_node;
+}
+
+syntax_tree_node * new_syntax_tree_node_int(const char * name, int line, int val)
+{
+	syntax_tree_node * new_node = (syntax_tree_node *)malloc(sizeof(syntax_tree_node));
+	if (name)
+		strncpy(new_node->name, name, SYNTAX_TREE_NODE_NAME_MAX);
+	else
+		new_node->name[0] = '\0';
+	new_node->children_num = 0;
+    new_node->line = line;
+    new_node->value_type = INT_TYPE;
+    new_node->int_value = val;
+	return new_node;
+}
+
+syntax_tree_node * new_syntax_tree_node_float(const char * name, int line, float val)
+{
+	syntax_tree_node * new_node = (syntax_tree_node *)malloc(sizeof(syntax_tree_node));
+	if (name)
+		strncpy(new_node->name, name, SYNTAX_TREE_NODE_NAME_MAX);
+	else
+		new_node->name[0] = '\0';
+	new_node->children_num = 0;
+    new_node->line = line;
+    new_node->value_type = FLOAT_TYPE;
+    new_node->float_value = val;
 	return new_node;
 }
 
@@ -61,8 +105,19 @@ void print_syntax_tree_node(FILE * fout, syntax_tree_node * node, int level)
 	for (i = 0; i < level; i++) {
 		fprintf(fout, "  ");
 	}
-	fprintf(fout, "%s %s\n", (node->children_num ? "+" : "*"), node->name);
-
+    if (node->value_type == NON_TYPE) {
+        if (node->children_num == 0) {
+            fprintf(fout, "%s\n", node->name);
+        } else {
+            fprintf(fout, "%s (%d)\n", node->name, node->line);
+        }
+    } else if (node->value_type == STRING_TYPE) {
+        fprintf(fout, "%s: %s\n", node->name, node->str_value);
+    } else if (node->value_type == INT_TYPE) {
+        fprintf(fout, "%s: %d\n", node->name, node->int_value);
+    } else if (node->value_type == FLOAT_TYPE) {
+        fprintf(fout, "%s: %f\n", node->name, node->float_value);
+    }
 	for (i = 0; i < node->children_num; i++) {
 		print_syntax_tree_node(fout, node->children[i], level + 1);
 	}

@@ -9,12 +9,27 @@
 
 int lines = 1;
 
-void pass_node(char *text){
-     yylval.node = new_syntax_tree_node(text);
+void pass_node(char *text, int line){
+     yylval.node = new_syntax_tree_node(text, line);
+}
+
+void pass_id_node(char *text, int line, char *id){
+     yylval.node = new_syntax_tree_node_id(text, line, id);
+}
+
+void pass_int_node(char *text, int line, int val){
+     yylval.node = new_syntax_tree_node_int(text, line, val);
+}
+
+void pass_float_node(char *text, int line, float val){
+     yylval.node = new_syntax_tree_node_float(text, line, val);
 }
 
 // #define RETURN_TOKEN(token) printf("%s ", #token);return token   // 不太明白为什么写成这样就可以输出token，#token是什么？
-#define RETURN_TOKEN(token) return token
+#define RETURN_TOKEN(token) /*printf("%s %d ", #token, lines);*/pass_node(#token, lines);return token
+#define RETURN_ID(token)    /*printf("%s %d ", #token, lines);*/pass_id_node(#token, lines, yytext);return token
+#define RETURN_INT(token)   /*printf("%s %d ", #token, lines);*/pass_int_node(#token, lines, atoi(yytext));return token
+#define RETURN_FLOAT(token) /*printf("%s %d ", #token, lines);*/pass_float_node(#token, lines, atof(yytext));return token
 
 %}
 
@@ -47,9 +62,8 @@ if                                  RETURN_TOKEN(IF);
 else                                RETURN_TOKEN(ELSE);
 while                               RETURN_TOKEN(WHILE);
 
-int  |
-float                               RETURN_TOKEN(TYPE);
-
+int                                 pass_node("TYPE: int", lines);return TYPE;/*要求返回TYPE，但我觉得词法返回INT和FLOAT更好*/
+float                               pass_node("TYPE: float", lines);return TYPE;
 ">"  |
 "<"  |
 ">=" |
@@ -57,16 +71,16 @@ float                               RETURN_TOKEN(TYPE);
 "==" |
 "!="                                RETURN_TOKEN(RELOP);
 
-{ID}                                yylval.string = strdup(yytext); RETURN_TOKEN(ID);
+{ID}                                RETURN_ID(ID);/*yylval.string = strdup(yytext)*/
 
 0           |
 [1-9][0-9]* |
 0[0-7]+     |
-0[xX][0-9a-fA-F]+                   yylval.number = atoi(yytext); RETURN_TOKEN(INT);
+0[xX][0-9a-fA-F]+                   RETURN_INT(INT);
      
 [0-9]+\.[0-9]+          |
 \.[0-9]+[eE][+-]?[0-9]+ |
-[0-9]+\.[0-9]*[eE][+-]?[0-9]+       yylval.floats = (float)atof(yytext); RETURN_TOKEN(FLOAT);
+[0-9]+\.[0-9]*[eE][+-]?[0-9]+       RETURN_FLOAT(FLOAT);
 
 \/\/[^\n]*  |
 \/\*([^*]|\*+[^*/])*\*+\/           ;/*comment*/
