@@ -14,6 +14,7 @@ extern FILE * yyin;
 
 // external variables from lexical_analyzer module
 extern int lines;
+extern int error; 
 extern char * yytext;
 
 // Global syntax tree
@@ -326,7 +327,7 @@ void yyerror(const char * s) {
 /// to stdout.  If input_path is NULL, read from stdin.
 ///
 /// This function initializes essential states before running yyparse().
-syntax_tree *parse(const char *input_path) {
+syntax_tree *parse(const char *input_path, int* flex_error) {   // 垃圾C语言，没有引用传参，没有重载，也没有bool
     if (input_path != NULL) {
         if (!(yyin = fopen(input_path, "r"))) {
             fprintf(stderr, "[ERR] Open input file %s failed.\n", input_path);
@@ -340,6 +341,7 @@ syntax_tree *parse(const char *input_path) {
     gt = new_syntax_tree();
     yyrestart(yyin);
     yyparse();
+    *flex_error = error;
     return gt;
 }
 

@@ -1,5 +1,6 @@
 #include "syntax_tree.h"
-extern syntax_tree *parse(const char*);
+
+extern syntax_tree *parse(const char*, int* flex_error);
 
 int main(int argc, char *argv[])
 {
@@ -14,8 +15,11 @@ int main(int argc, char *argv[])
     }
 
     // Call the syntax analyzer.
-    tree = parse(input);
-    print_syntax_tree(stdout, tree);
+    int flex_error = 0;
+    tree = parse(input, &flex_error);
+    if (flex_error == 0) {
+        print_syntax_tree(stdout, tree);
+    }
     del_syntax_tree(tree);
     return 0;
 }

@@ -8,6 +8,7 @@
 #include "syntax_analyzer.h"
 
 int lines = 1;
+int error = 0;
 
 void pass_node(char *text, int line){
      yylval.node = new_syntax_tree_node(text, line);
@@ -25,11 +26,10 @@ void pass_float_node(char *text, int line, float val){
      yylval.node = new_syntax_tree_node_float(text, line, val);
 }
 
-// #define RETURN_TOKEN(token) printf("%s ", #token);return token   // 不太明白为什么写成这样就可以输出token，#token是什么？
-#define RETURN_TOKEN(token) /*printf("%s %d ", #token, lines);*/pass_node(#token, lines);return token
-#define RETURN_ID(token)    /*printf("%s %d ", #token, lines);*/pass_id_node(#token, lines, yytext);return token
-#define RETURN_INT(token)   /*printf("%s %d ", #token, lines);*/pass_int_node(#token, lines, atoi(yytext));return token
-#define RETURN_FLOAT(token) /*printf("%s %d ", #token, lines);*/pass_float_node(#token, lines, atof(yytext));return token
+#define RETURN_TOKEN(token) /*printf("%s ", #token);*/pass_node(#token, lines);return token
+#define RETURN_ID(token)    /*printf("%s ", #token);*/pass_id_node(#token, lines, yytext);return token
+#define RETURN_INT(token)   /*printf("%s ", #token);*/pass_int_node(#token, lines, atoi(yytext));return token
+#define RETURN_FLOAT(token) /*printf("%s ", #token);*/pass_float_node(#token, lines, atof(yytext));return token
 
 %}
 
@@ -86,13 +86,13 @@ float                               pass_node("TYPE: float", lines);return TYPE;
 \/\*([^*]|\*+[^*/])*\*+\/           ;/*comment*/
 
 0[0-9]+ |
-0[xX][0-9a-xA-X]+                   printf("Error type A at Line %d: invalid int \"%s\".\n", lines, yytext);/*捕获错误的数字，而不是识别成两个int*/
+0[xX][0-9a-xA-X]+                   error=1;printf("Error type A at Line %d: invalid int \"%s\".\n", lines, yytext);/*捕获错误的数字，而不是识别成两个int*/
 
 [0-9]*\. |
 \.[0-9]* |
-[0-9]+\.[0-9]*[eE]                  printf("Error type A at Line %d: invalid float \"%s\".\n", lines, yytext);
+[0-9]+\.[0-9]*[eE]                  error=1;printf("Error type A at Line %d: invalid float \"%s\".\n", lines, yytext);
 
-"*/"                                printf("Error type A at Line %d: invalid comment \"%s\".\n", lines, yytext);
+"*/"                                error=1;printf("Error type A at Line %d: invalid comment \"%s\".\n", lines, yytext);
 
-.                                   printf("Error type A at Line %d: Mysterious character \"%s\".\n", lines, yytext);
+.                                   error=1;printf("Error type A at Line %d: Mysterious character \"%s\".\n", lines, yytext);
 %%
