@@ -26,9 +26,9 @@
 
 若没有错误则输出语法树
 
-## 2 How to build
+## 2 如何运行
 
-### 2.1 Environment
+### 2.1 环境
 
 ``` bash
 sudo apt install build-essential
@@ -47,7 +47,7 @@ flex --version  # 2.6.4
 bison --version # 3.7.6
 ```
 
-### 2.2 Run
+### 2.2 Build
 
 ``` bash
 mkdir build
@@ -56,7 +56,7 @@ cmake ..
 make
 ```
 
-## 3 How to run
+## 3 如何测试
 
 构建成功后运行测试用例:
 
