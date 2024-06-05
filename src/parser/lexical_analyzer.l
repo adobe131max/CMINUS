@@ -63,7 +63,8 @@ else                                RETURN_TOKEN(ELSE);
 while                               RETURN_TOKEN(WHILE);
 
 int                                 pass_node("TYPE: int", lines);return TYPE;/*要求返回TYPE，但我觉得词法返回INT和FLOAT更好*/
-float                               pass_node("TYPE: float", lines);return TYPE;
+float                               pass_node("TYPE: float", lines);return TYPE;/*规则就是这么输出*/
+
 ">"  |
 "<"  |
 ">=" |
@@ -71,7 +72,7 @@ float                               pass_node("TYPE: float", lines);return TYPE;
 "==" |
 "!="                                RETURN_TOKEN(RELOP);
 
-{ID}                                RETURN_ID(ID);/*yylval.string = strdup(yytext)*/
+{ID}                                RETURN_ID(ID);
 
 0           |
 [1-9][0-9]* |

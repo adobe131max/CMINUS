@@ -1,8 +1,8 @@
 # 简介
 
-WHU 2024 编译原理大作业
+[WHU 2024 编译原理大作业](https://github.com/adobe131max/CMINUS)
 
-## 1 要求
+## 1 实验要求
 
 ### 1.1 识别词法错误
 
@@ -28,7 +28,26 @@ WHU 2024 编译原理大作业
 
 ## 2 How to build
 
-打开项目
+### 2.1 Environment
+
+``` bash
+sudo apt install build-essential
+
+# LLVM、Clang
+sudo apt install clang llvm
+
+# CMAKE
+sudo apt install cmake
+cmake --version # 3.25.5
+
+# flex bison
+sudo apt-get install flex bison
+
+flex --version  # 2.6.4
+bison --version # 3.7.6
+```
+
+### 2.2 Run
 
 ``` bash
 mkdir build
@@ -39,9 +58,16 @@ make
 
 ## 3 How to run
 
-构建成功后运行:
+构建成功后运行测试用例:
 
-`./parser ../test/example1.c`
+``` bash
+./parser ../test/comment.c
+./parser ../test/example1.c
+./parser ../test/example2.c
+./parser ../test/example3.c
+./parser ../test/float.c
+./parser ../test/int.c
+```
 
 ## 4 记录
 
@@ -49,4 +75,5 @@ yylval 是一个全局变量，用于在词法分析器(由 Flex 生成)和语�
 
 ## 5 References
 
-- [USTC 编译原理和技术 2023](https://ustc-compiler-principles.github.io/2023/)
+1. [USTC 编译原理和技术 2023](https://ustc-compiler-principles.github.io/2023/)
+2. [miniob](https://github.com/oceanbase/miniob)

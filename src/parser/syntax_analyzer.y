@@ -44,6 +44,7 @@ syntax_tree_node *node(const char *node_name, int children_num, ...);
 %token <node> RELOP
 %token <node> PLUS
 %token <node> MINUS
+%token <node> UMINUS
 %token <node> STAR
 %token <node> DIV
 %token <node> AND
@@ -93,7 +94,8 @@ syntax_tree_node *node(const char *node_name, int children_num, ...);
 %left RELOP
 %left PLUS MINUS
 %left STAR DIV
-%right NOT
+%right UMINUS NOT
+%left LP RP LB RB DOT
 
 // 定义文法开始符号
 %start Program
@@ -284,7 +286,7 @@ Exp:
     | LP Exp RP {
         $$ = node("Exp", 3, $1, $2, $3);
     }
-    | MINUS Exp {
+    | MINUS Exp %prec UMINUS {  // %prec UMINUS: 使用UMINUS的优先级与结合性
         $$ = node("Exp", 2, $1, $2);
     }
     | NOT Exp {
