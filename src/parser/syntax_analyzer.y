@@ -329,12 +329,12 @@ Args:
 
 // 语法错误处理
 void yyerror(const char * s) {
-    error = 1;
+    error = 2;
     /* fprintf(stderr, "Error type B at Line %d: %s.\n", lines, s); */
 }
 
 void print_e(const char* s) {
-    error = 1;
+    error = 3;
     fprintf(stderr, "Error type B at Line %d: %s.\n", lines, s);
 }
 
@@ -342,7 +342,7 @@ void print_e(const char* s) {
 /// to stdout.  If input_path is NULL, read from stdin.
 ///
 /// This function initializes essential states before running yyparse().
-syntax_tree *parse(const char *input_path, int* flex_error) {   // 垃圾C语言，没有引用传参，没有重载，也没有bool
+syntax_tree *parse(const char *input_path, int* error_) {
     if (input_path != NULL) {
         if (!(yyin = fopen(input_path, "r"))) {
             fprintf(stderr, "[ERR] Open input file %s failed.\n", input_path);
@@ -356,7 +356,7 @@ syntax_tree *parse(const char *input_path, int* flex_error) {   // 垃圾C语言
     gt = new_syntax_tree();
     yyrestart(yyin);
     yyparse();
-    *flex_error = error;
+    *error_ = error;
     return gt;
 }
 

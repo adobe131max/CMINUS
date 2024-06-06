@@ -33,8 +33,8 @@ void pass_float_node(char *text, int line, float val){
 
 %}
 
-DOT             \.
-ID              [A-Za-z_]+[A-Za-z0-9_]*
+DOT                                 \.
+ID                                  [A-Za-z_]+[A-Za-z0-9_]*
 
 %%
 " "                                 ;
