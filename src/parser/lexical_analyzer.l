@@ -26,6 +26,15 @@ void pass_float_node(char *text, int line, float val){
      yylval.node = new_syntax_tree_node_float(text, line, val);
 }
 
+void count_newlines(const char* str) {
+    while (*str) {
+        if (*str == '\n') {
+            lines++;
+        }
+        str++;
+    }
+}
+
 #define RETURN_TOKEN(token) /*printf("%s ", #token);*/pass_node(#token, lines);return token
 #define RETURN_ID(token)    /*printf("%s ", #token);*/pass_id_node(#token, lines, yytext);return token
 #define RETURN_INT(token)   /*printf("%s ", #token);*/pass_int_node(#token, lines, atoi(yytext));return token
@@ -84,7 +93,7 @@ float                               pass_node("TYPE: float", lines);return TYPE;
 [0-9]+\.[0-9]*[eE][+-]?[0-9]+       RETURN_FLOAT(FLOAT);
 
 \/\/[^\n]*  |
-\/\*([^*]|\*+[^*/])*\*+\/           ;/*comment*/
+\/\*([^*]|\*+[^*/])*\*+\/           count_newlines(yytext);/*comment*/
 
 0[0-9]+ |
 0[xX][0-9a-xA-X]+                   error=1;printf("Error type A at Line %d: invalid int \"%s\".\n", lines, yytext);pass_int_node("INT", lines, 0);return INT;/*捕获错误的数字，而不是识别成两个int*/
